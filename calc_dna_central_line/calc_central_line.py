@@ -14,6 +14,7 @@ import time
 import mdtraj
 from tqdm import tqdm
 import time
+import os
 
 
 # In[18]:
@@ -110,18 +111,24 @@ def сalculate_central_line(dna):
 
 # In[26]:
 
+#print('Write the length of DNA in bp:')
+bp = 4000
+#print('Write the concentration of NaCl in system:')
+#conc = int(input().strip())
+cc = [0.1,2,5,12]
 
-conc = [50]
-boxes = [1200]
+for conc in cc:	
 
-
-for mM,box_lenght in (zip(conc,boxes)):
-	print(f'\n {mM}mM in box {box_lenght}x{box_lenght}x{box_lenght}')
-	path = f'./10000bp_mM50_push'
-	nameIN = f'../DNA_packaging/dsDNA/mM50_length/10000bp/push_from_30nm/dsDNA_10000bp_mM50.0_push_from_30nm'
-	nameOUT = f'dsDNA_10000bp_mM{mM}_central_line'
-	u = MDAnalysis.Universe(f'{nameIN}.psf', 
-	                        f'{nameIN}.dcd')
+	print(f'System: {bp} bp, {conc} mM')
+#	print(f'Run {run} \n')
+	path = f'../DNA/dsDNA/{bp}bp/{conc}mM/push_from_30nm'
+	if not os.path.exists(f'{path}/central_line'):
+		os.mkdir(f'{path}/central_line')
+	nameIN = f'dsDNA_{bp}bp_{conc}mM_push'
+	nameOUT = f'central_line/dsDNA_{bp}bp_{conc}mM'
+	u = MDAnalysis.Universe(f'{path}/{nameIN}.psf', 
+	                        f'{path}/{nameIN}.dcd')
+	print('Done reading psf and dcd...')
 	dna = u.select_atoms('resname DNA')
 
 
@@ -129,6 +136,7 @@ for mM,box_lenght in (zip(conc,boxes)):
 
 
 	#Write xyz-file for central line
+	print('Start writing xyz...')
 	for_xyz = np.array(сalculate_central_line(dna), dtype = np.float32)
 	xyz_output = open(f'{path}/{nameOUT}.xyz', "w")
 	xyz_output.write(str(len(for_xyz)) + "\n")
@@ -139,7 +147,7 @@ for mM,box_lenght in (zip(conc,boxes)):
 	    xyz_output.write(str(round(ia[1],7))+"\t")
 	    xyz_output.write(str(round(ia[2],7))+"\n")
 	xyz_output.close()
-
+	print('Done writing xyz...')
 	#Запись углов в dat файл
 	#angles_output = open(sys.argv[3], "w")
 	#for ang in angles:
@@ -149,7 +157,7 @@ for mM,box_lenght in (zip(conc,boxes)):
 
 	# In[ ]:
 
-
+	print('Start writing dcd...')
 	f = mdtraj.formats.DCDTrajectoryFile(f'{path}/{nameOUT}.dcd', 'w')
 	for ts in tqdm(u.trajectory):
 	    # start_time = time.time()
@@ -162,5 +170,5 @@ for mM,box_lenght in (zip(conc,boxes)):
 	    f.write(c_coords)
 	    # time.sleep(0.01)
 	f.close()
-
+	print('Done writing dcd...')
 

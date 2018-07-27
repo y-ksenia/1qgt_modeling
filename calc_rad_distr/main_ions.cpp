@@ -14,11 +14,11 @@ DCD dcd;
 TOPData top;
 
 
-int ParseDCD(const char* name, char* dcdFilename, const char* topfilename, int stride){	
-	readTOP(topfilename, &top);
+int ParseDCD(const char* bp, const char* mM, char* dcdFilebp, const char* topfilebp, int stride){	
+	readTOP(topfilebp, &top);
 	int i;
 	double a;
-	dcdOpenRead(&dcd, dcdFilename);
+	dcdOpenRead(&dcd, dcdFilebp);
 
 	dcdReadHeader(&dcd);
 	dcd.frame.X = (float*)calloc(top.atomCount, sizeof(float));
@@ -47,8 +47,8 @@ int ParseDCD(const char* name, char* dcdFilename, const char* topfilename, int s
 	
 	while(dcdReadFrame(&dcd) != -1){
 		
-		sprintf(datNA, "../DNA/dsDNA/%sbp/50mM/radius_vectors/Na.%lld.dat", name, frame);
-		sprintf(datCL, "../DNA/dsDNA/%sbp/50mM/radius_vectors/Cl.%lld.dat", name, frame);
+		sprintf(datNA, "../DNA/dsDNA/%sbp/%smM/push_from_30nm/radius_vectors/Na.%lld.dat", bp, mM, frame);
+		sprintf(datCL, "../DNA/dsDNA/%sbp/%smM/push_from_30nm/radius_vectors/Cl.%lld.dat", bp, mM, frame);
 			
 		FILE* out2 = fopen(datNA, "w");
 		FILE* out3 = fopen(datCL, "w");
@@ -84,16 +84,17 @@ int ParseDCD(const char* name, char* dcdFilename, const char* topfilename, int s
 
 
 int main(int argc, char *argv[]){
-	char* name = argv[1];
+	char* bp = argv[1];
+	char* mM = argv[2];
 	//long long int max_frame = atoi(argv[2]);
-	int stride = atoi(argv[2]);
-	char dcdfilename[1024];
-	// sprintf(dcdfilename, "%s/%s_push.dcd", name, name);
-	sprintf(dcdfilename, "../DNA/dsDNA/%sbp/50mM/push_from_30nm/dsDNA_%sbp_mM50_push_from_30nm.dcd", name, name);
+	int stride = atoi(argv[3]);
+	char dcdfilebp[1024];
+	// sprintf(dcdfilebp, "%s/%s_push.dcd", bp, bp);
+	sprintf(dcdfilebp, "../DNA/dsDNA/%sbp/%smM/push_from_30nm/dsDNA_%sbp_%smM_push.dcd", bp, mM, bp, mM);
 	
-	char topfilename[1024];
-	// sprintf(topfilename, "%s/%s.top", name, name);
-	sprintf(topfilename, "../DNA/dsDNA/%sbp/50mM/topology/dsDNA_%sbp_mM50.top", name, name);
+	char topfilebp[1024];
+	// sprintf(topfilebp, "%s/%s.top", bp, bp);
+	sprintf(topfilebp, "../DNA/dsDNA/%sbp/%smM/topology/dsDNA_%sbp_%smM.top", bp, mM, bp, mM);
 	
-	ParseDCD(name, dcdfilename, topfilename, stride);
+	ParseDCD(bp, mM, dcdfilebp, topfilebp, stride);
 }
