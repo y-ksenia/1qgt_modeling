@@ -17,3 +17,5 @@ You can find the full final text of my research as MSc_thesis_MIPT.pdf.
 - calc_rad_distr - calculation of radial distribution of DNA packed into the capsid
 #### Visualization
 - build_pressure_plots - visualization of mechanic properties for the experiments
+
+##### The code to run experiments can be found [here](https://github.com/zhmurov/MD).
