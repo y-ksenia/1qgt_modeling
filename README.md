@@ -2,7 +2,7 @@
 
 This is a repository with the code of my BSs (2017) and MSc (2019) theses at the Moscow Institute of Physics and Technology 
 in Laboratory for Computer and Mathematical Modeling of Biological Systems "In silico investigation of the mechanical properties of DNA-containing capsids". 
-You can find the full final text of my research as MSc_thesis_MIPT.pdf.
+You can find the full final text of my research as [MSc_thesis_MIPT.pdf](https://github.com/y-ksenia/1qgt_modeling/blob/master/MSc_thesis_MIPT.pdf).
 
 ## Structure
 #### Creation of structures and their topologies
